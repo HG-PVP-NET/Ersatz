@@ -8,7 +8,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Getter;
 import com.pikachu.papiaddon.Main;
 import com.pikachu.papiaddon.placeholderapi.PlaceholderAPIEvent;
 import com.pikachu.papiaddon.placeholderapi.PlaceholderAPIListener;
@@ -25,18 +24,8 @@ public class EvtPlaceholderRequest extends SkriptEvent {
 
     static {
         Skript.registerEvent("Placeholder Request", EvtPlaceholderRequest.class, PlaceholderAPIEvent.class, "(placeholder[api]|papi) request with [the] prefix %string%");
-        EventValues.registerEventValue(PlaceholderAPIEvent.class, Player.class, new Getter<Player, PlaceholderAPIEvent>() {
-            @Override
-            public Player get(PlaceholderAPIEvent e) {
-                return e.getPlayer();
-            }
-        }, 0);
-        EventValues.registerEventValue(PlaceholderAPIEvent.class, String.class, new Getter<String, PlaceholderAPIEvent>() {
-            @Override
-            public String get(PlaceholderAPIEvent e) {
-                return e.getIdentifier();
-            }
-        }, 0);
+        EventValues.registerEventValue(PlaceholderAPIEvent.class, Player.class, PlaceholderAPIEvent::getPlayer);
+        EventValues.registerEventValue(PlaceholderAPIEvent.class, String.class, PlaceholderAPIEvent::getIdentifier);
     }
 
     @Override
@@ -46,7 +35,10 @@ public class EvtPlaceholderRequest extends SkriptEvent {
             Skript.error(prefix + " is not a valid placeholder", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        new PlaceholderAPIListener(Main.getInstance(), prefix).hook();
+        if (!new PlaceholderAPIListener(Main.getInstance(), prefix).register()) {
+            Skript.error("Unable to register the PlaceholderAPI prefix '" + prefix + "'", ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
         return true;
     }
 
