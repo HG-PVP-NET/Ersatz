@@ -1,6 +1,5 @@
 package com.pikachu.papiaddon.skript.expressions;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -25,7 +24,7 @@ public class ExprPrefix extends SimpleExpression<String> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(PlaceholderAPIEvent.class)) {
+        if (!getParser().isCurrentEvent(PlaceholderAPIEvent.class)) {
             Skript.error("The PlaceholderAPI prefix can only be used in a placeholder request event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }

@@ -28,7 +28,7 @@ public class ExprPlaceholder extends SimpleExpression<String> {
     }
 
     private String formatPlaceholder(String placeholder) {
-        if (placeholder == null) {
+        if (placeholder == null || placeholder.isEmpty()) {
             return null;
         }
         if (placeholder.charAt(0) == '%') {
@@ -63,7 +63,7 @@ public class ExprPlaceholder extends SimpleExpression<String> {
     @Override
     protected String[] get(final Event e) {
         String[] placeholders = this.placeholders.getArray(e);
-        Player[] players = this.players.getArray(e);
+        Player[] players = this.players == null ? new Player[0] : this.players.getArray(e);
         List<String> values = new ArrayList<>();
         if (players.length !=  0) {
             for (String ph : placeholders) {
@@ -81,12 +81,13 @@ public class ExprPlaceholder extends SimpleExpression<String> {
 
     @Override
     public String toString(Event e, boolean debug) {
-        return "the value of placeholder " + placeholders.toString(e, debug) + " from " + players.toString(e, debug);
+        return "the value of placeholder " + placeholders.toString(e, debug)
+                + (players == null ? "" : " from " + players.toString(e, debug));
     }
 
     @Override
     public boolean isSingle() {
-        return placeholders.isSingle() && players.isSingle();
+        return placeholders.isSingle() && (players == null || players.isSingle());
     }
 
     @Override

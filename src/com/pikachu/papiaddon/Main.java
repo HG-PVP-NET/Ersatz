@@ -24,8 +24,9 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         try {
             getAddonInstance().loadClasses("com.pikachu.papiaddon.skript", "events", "expressions");
+            log.info("Ersatz is ready for Skript " + Skript.getVersion() + " on Paper 26.2.");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to load Ersatz's Skript syntax", e);
         }
     }
 
