@@ -1,5 +1,6 @@
 package com.pikachu.papiaddon.placeholderapi;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -23,6 +24,7 @@ public class PlaceholderAPIEvent extends Event {
     }
 
     public PlaceholderAPIEvent(String identifier, Player player, String prefix) {
+        super(!Bukkit.isPrimaryThread());
         this.prefix = prefix;
         this.identifier = identifier;
         this.player = player;
